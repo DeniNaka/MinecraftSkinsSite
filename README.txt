@@ -9,7 +9,7 @@ GET    /api/skins/{id} - получение конкретного скина п
 POST   /api/purchases/{skinId} - покупка скина по значению id
 GET    /api/purchases - список купленных скинов
 
-- Для запуска backend просто запустить проект (ссылка в браузере https://localhost:7164/swagger/index.html)
+- Для запуска backend запустить проект через MVS (ссылка в браузере https://localhost:7164/swagger/index.html)
 
 - Для запуска frontend после запуска проекта поменять ссылку на https://localhost:7164/index.html
 
