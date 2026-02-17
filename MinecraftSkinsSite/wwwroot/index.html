@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Minecraft Skins Shop</title>
+</head>
+<body>
+    <h1>Skins</h1>
+
+    <button onclick="loadSkins()">Load Skins</button>
+
+    <div id="skins"></div>
+
+    <script>
+        const apiUrl = "https://localhost:7164/api";
+
+        async function loadSkins() {
+            const response = await fetch(`${apiUrl}/skins`);
+            const skins = await response.json();
+
+            const container = document.getElementById("skins");
+            container.innerHTML = "";
+
+            skins.forEach(skin => {
+                const div = document.createElement("div");
+
+                div.innerHTML = `
+                                <h3>${skin.name}</h3>
+                                <p>Base price: $${skin.basePriceUsd}</p>
+                                <p>Final price: $${skin.finalPriceUsd}</p>
+                                <p>Available: ${skin.isAvailable}</p>
+                                <button onclick="buySkin(${skin.id})">Buy</button>
+                                <hr/>
+                            `;
+
+                container.appendChild(div);
+            });
+        }
+
+        async function buySkin(id) {
+            const response = await fetch(`${apiUrl}/purchases/${id}`, {
+                method: "POST"
+            });
+
+            if (response.ok) {
+                alert("Purchased!");
+            } else {
+                alert("Error buying skin");
+            }
+        }
+    </script>
+</body>
+</html>
