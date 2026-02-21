@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinecraftSkinsSite.Data;
+using MinecraftSkinsSite.Interfaces;
 using MinecraftSkinsSite.Models;
+using MinecraftSkinsSite.Repositories;
 using MinecraftSkinsSite.Services;
 
 namespace MinecraftSkinsSite.Controllers;
@@ -9,38 +11,20 @@ namespace MinecraftSkinsSite.Controllers;
 [Route("api/purchases")]
 public class PurchasesController : ControllerBase
 {
-    private readonly InMemoryDatabase db;
-    private readonly PriceService priceService;
+    private readonly IPurchasesService purchasesService;
 
-    public PurchasesController(InMemoryDatabase db, PriceService priceService)
+    public PurchasesController(IPurchasesService purchasesService)
     {
-        this.db = db;
-        this.priceService = priceService;
+        this.purchasesService = purchasesService;
     }
 
     [HttpPost("{skinId}")]
     public async Task<IActionResult> Buy(int skinId, CancellationToken ct)
     {
-        var skin = db.Skins.FirstOrDefault(x => x.Id == skinId);
+        var purchase = await purchasesService.BuyAsync(skinId, ct);
 
-        if (skin == null)
-            return NotFound("Skin not found");
-
-        if (!skin.IsAvailable)
+        if (!purchase.Success)
             return BadRequest("Skin is not available");
-
-        var finalPrice = await priceService.CalculateFinalPriceAsync(skin.BasePriceUsd, ct);
-
-        var purchase = new Purchase
-        {
-            Id = db.Purchases.Count + 1,
-            SkinId = skin.Id,
-            SkinName = skin.Name,
-            FinalPriceUsd = finalPrice,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        db.Purchases.Add(purchase);
 
         return Ok(purchase);
     }
@@ -48,6 +32,6 @@ public class PurchasesController : ControllerBase
     [HttpGet]
     public IActionResult GetAll()
     {
-        return Ok(db.Purchases);
+        return Ok(purchasesService.GetAllAsync());
     }
 }

@@ -1,10 +1,12 @@
-﻿namespace MinecraftSkinsSite.Services
-{
-    public class PriceService
-    {
-        private readonly BtcRateService btcRateService;
+﻿using MinecraftSkinsSite.Interfaces;
 
-        public PriceService(BtcRateService btcRateService)
+namespace MinecraftSkinsSite.Services
+{
+    public class PriceService : IPriceService
+    {
+        private readonly IBtcRateService btcRateService;
+
+        public PriceService(IBtcRateService btcRateService)
         {
             this.btcRateService = btcRateService;
         }
