@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinecraftSkinsSite.Data;
+using MinecraftSkinsSite.Interfaces;
+using MinecraftSkinsSite.Repositories;
 using MinecraftSkinsSite.Services;
 
 namespace MinecraftSkinsSite.Controllers;
@@ -8,53 +10,29 @@ namespace MinecraftSkinsSite.Controllers;
 [Route("api/skins")]
 public class SkinsController : ControllerBase
 {
-    private readonly InMemoryDatabase db;
-    private readonly PriceService priceService;
+    private readonly ISkinsService skinsService;
 
-    public SkinsController(InMemoryDatabase db, PriceService priceService)
+    public SkinsController(ISkinsService skinsService)
     {
-        this.db = db;
-        this.priceService = priceService;
+        this.skinsService = skinsService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken ct)
     {
-        var result = new List<object>();
+        var result = await skinsService.GetAllAsync(ct);
 
-        foreach (var skin in db.Skins)
-        {
-            var finalPrice = await priceService.CalculateFinalPriceAsync(skin.BasePriceUsd, ct);
-
-            result.Add(new
-            {
-                skin.Id,
-                skin.Name,
-                skin.BasePriceUsd,
-                skin.IsAvailable,
-                FinalPriceUsd = finalPrice
-            });
-        }
         return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id, CancellationToken ct)
     {
-        var skin = db.Skins.FirstOrDefault(x => x.Id == id);
+        var result = await skinsService.GetByIdAsync(id, ct);
 
-        if (skin == null)
+        if (result == null)
             return NotFound();
 
-        var finalPrice = await priceService.CalculateFinalPriceAsync(skin.BasePriceUsd, ct);
-
-        return Ok(new
-        {
-            skin.Id,
-            skin.Name,
-            skin.BasePriceUsd,
-            skin.IsAvailable,
-            FinalPriceUsd = finalPrice
-        });
+        return Ok(result);
     }
 }
