@@ -17,30 +17,30 @@ namespace MinecraftSkinsSite.Services
         }
 
         [HttpGet]
-        public async Task<IEnumerable<object>> GetAllAsync(CancellationToken ct)
+        public async Task<IEnumerable<Skin>> GetAllAsync(CancellationToken ct)
         {
             var skins = skinRepository.GetAll();
 
-            var result = new List<object>();
+            var result = new List<Skin>();
 
             foreach (var skin in skins)
             {
                 var finalPrice = await priceService.CalculateFinalPriceAsync(skin.BasePriceUsd, ct);
 
-                result.Add(new
+                result.Add(new Skin()
                 {
-                    skin.Id,
-                    skin.Name,
-                    skin.BasePriceUsd,
-                    skin.IsAvailable,
-                    FinalPriceUsd = finalPrice
+                    Id = skin.Id,
+                    Name = skin.Name,
+                    BasePriceUsd = skin.BasePriceUsd,
+                    IsAvailable = skin.IsAvailable,
+                    FinalPriceUsd = finalPrice,
                 });
             }
             return result;
         }
 
         [HttpGet("{id}")]
-        public async Task<object?> GetByIdAsync(int id, CancellationToken ct)
+        public async Task<Skin?> GetByIdAsync(int id, CancellationToken ct)
         {
             var skin = skinRepository.GetById(id);
 
@@ -49,13 +49,13 @@ namespace MinecraftSkinsSite.Services
 
             var finalPrice = await priceService.CalculateFinalPriceAsync(skin.BasePriceUsd, ct);
 
-            return new
+            return new Skin()
             {
-                skin.Id,
-                skin.Name,
-                skin.BasePriceUsd,
-                skin.IsAvailable,
-                FinalPriceUsd = finalPrice
+                Id = skin.Id,
+                Name = skin.Name,
+                BasePriceUsd = skin.BasePriceUsd,
+                IsAvailable = skin.IsAvailable,
+                FinalPriceUsd = finalPrice,
             };
         }
     }

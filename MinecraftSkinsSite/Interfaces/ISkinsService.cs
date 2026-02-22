@@ -5,7 +5,7 @@ namespace MinecraftSkinsSite.Interfaces
 {
     public interface ISkinsService
     {
-        Task<IEnumerable<object>> GetAllAsync(CancellationToken ct);
-        Task<object?> GetByIdAsync(int id, CancellationToken ct);
+        Task<IEnumerable<Skin>> GetAllAsync(CancellationToken ct);
+        Task<Skin?> GetByIdAsync(int id, CancellationToken ct);
     }
 }

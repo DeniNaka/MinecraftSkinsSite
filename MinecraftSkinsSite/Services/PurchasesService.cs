@@ -36,7 +36,7 @@ namespace MinecraftSkinsSite.Services
                 Id = purchaseRepository.GetAll().Count + 1,
                 SkinId = skin.Id,
                 SkinName = skin.Name,
-                FinalPriceUsd = finalPrice,
+                FinalPrice = finalPrice,
                 CreatedAt = DateTime.UtcNow
             };
 

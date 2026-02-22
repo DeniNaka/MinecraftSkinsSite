@@ -5,7 +5,7 @@ function App() {
     const [purchases, setPurchases] = useState([]);
 
     const total = purchases
-        .reduce((sum, p) => sum + p.finalPriceUsd, 0)
+        .reduce((sum, p) => sum + p.finalPrice, 0)
         .toFixed(2);
 
     const loadSkins = async () => {
@@ -75,7 +75,7 @@ function App() {
             <h2>Purchases</h2>
             {purchases.map(p => (
                 <div key={p.id}>
-                    {p.skinName} - {p.finalPriceUsd}$
+                    {p.skinName} - {p.finalPrice}$
                 </div>
             ))}
 
