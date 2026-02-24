@@ -43,6 +43,7 @@ function App() {
 
             alert("Skin Purchased!");
             loadPurchases();
+            loadSkins();
         } catch (error) {
             console.error("Purchase Error:", error);
         } 
@@ -75,7 +76,7 @@ function App() {
             <h2>Purchases</h2>
             {purchases.map(p => (
                 <div key={p.id}>
-                    {p.skinName} - {p.finalPrice}$
+                    {p.skinName} - {p.createdAt} - {p.finalPrice}$
                 </div>
             ))}
 

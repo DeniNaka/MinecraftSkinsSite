@@ -16,7 +16,6 @@ namespace MinecraftSkinsSite.Services
             this.priceService = priceService;
         }
 
-        [HttpGet]
         public async Task<IEnumerable<Skin>> GetAllAsync(CancellationToken ct)
         {
             var skins = skinRepository.GetAll();
@@ -39,7 +38,6 @@ namespace MinecraftSkinsSite.Services
             return result;
         }
 
-        [HttpGet("{id}")]
         public async Task<Skin?> GetByIdAsync(int id, CancellationToken ct)
         {
             var skin = skinRepository.GetById(id);
