@@ -1,5 +1,6 @@
-
 using MinecraftSkinsSite.Data;
+using MinecraftSkinsSite.Interfaces;
+using MinecraftSkinsSite.Repositories;
 using MinecraftSkinsSite.Services;
 
 namespace MinecraftSkinsSite
@@ -15,9 +16,14 @@ namespace MinecraftSkinsSite
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddSingleton<InMemoryDatabase>();
-            builder.Services.AddHttpClient<BtcRateService>();
-            builder.Services.AddScoped<PriceService>();
+            builder.Services.AddHttpClient<IBtcRateService, BtcRateService>();
+            builder.Services.AddSingleton<IInMemoryDatabase, InMemoryDatabase>();
+            builder.Services.AddSingleton<ISkinRepository, SkinRepository>();
+            builder.Services.AddSingleton<IPurchaseRepository, PurchaseRepository>();
+            builder.Services.AddScoped<ISkinsService, SkinsService>();
+            builder.Services.AddScoped<IPurchasesService, PurchasesService>();
+            builder.Services.AddScoped<IPriceService, PriceService>();
+            builder.Services.AddMemoryCache();
 
             var app = builder.Build();
 
